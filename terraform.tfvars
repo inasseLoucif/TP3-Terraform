@@ -1,0 +1,1 @@
+trigramme = "ILF"  
