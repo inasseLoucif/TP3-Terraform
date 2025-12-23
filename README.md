@@ -47,8 +47,8 @@ terraform apply
 
 **Captures :**
 
-![Résultat de terraform plan](images/plan.jpg)  
-![Résultat de terraform apply (création des ressources)](images/apply.jpg)
+![Résultat de terraform plan](images/plan.png)  
+![Résultat de terraform apply (création des ressources)](images/apply.png)
 
 ---
 
@@ -67,7 +67,7 @@ L’infrastructure obtenue :
 
 **Capture :**
 
-![Détails de l'Auto Scaling Group ILF-asg](images/asg.jpg)
+![Détails de l'Auto Scaling Group ILF-asg](images/asg.png)
 
 ---
 
@@ -78,12 +78,12 @@ Test d’augmentation de capacité :
 terraform apply -var="desired_capacity=3"
 
 
-Cette commande met à jour l’ASG pour lancer 3 instances EC2, qui s’enregistrent automatiquement dans le target group via les health checks de l’ALB.[file:25][file:21]
+Cette commande met à jour l’ASG pour lancer 3 instances EC2, qui s’enregistrent automatiquement dans le target group via les health checks de l’ALB.
 
 **Captures :**
 
-![ASG avec capacité souhaitée passée à 3](images/asg2.jpg)  
-![Instances EC2 en cours d'exécution](images/instances.jpg)
+![ASG avec capacité souhaitée passée à 3](images/asg2.png)  
+![Instances EC2 en cours d'exécution](images/instances.png)
 
 ---
 
@@ -93,8 +93,8 @@ Cette commande met à jour l’ASG pour lancer 3 instances EC2, qui s’enregist
 - Vérification dans la console AWS :
   - ASG `ILF-asg` : instances en `InService`.
   - Target group `ILF-tg` : cibles en `healthy`.
-  - ALB `ILF-alb` : listener HTTP sur le port 80.[file:21][file:22]
-
+  - ALB `ILF-alb` : listener HTTP sur le port 80.
+![Target group avec 3 instances healthy](images/targetgrp.png)
 ---
 
 ## Étape 6 : Nettoyage
