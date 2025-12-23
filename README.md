@@ -22,9 +22,9 @@ terraform validate
 
 **Captures :**
 
-![Configuration du provider AWS](images/provider.jpg)  
-![Variables Terraform](images/variables.jpg)  
-![terraform init réussi](images/init.jpg)
+![Configuration du provider AWS](images/provider.png)  
+![Variables Terraform](images/variables.png)  
+![terraform init réussi](images/init.png)
 
 ---
 
