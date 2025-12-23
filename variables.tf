@@ -1,7 +1,7 @@
 variable "trigramme" {
   description = "Votre trigramme"
   type        = string
-  default     = "ILF"  # ← CHANGEZ ICI
+  default     = "ILF"  
 }
 
 variable "ami_id" {
