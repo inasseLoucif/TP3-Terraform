@@ -3,8 +3,7 @@
 Ce TP a consisté à créer une infrastructure AWS scalable avec Terraform utilisant un Auto Scaling Group, un Application Load Balancer et des instances EC2 automatisées. Le trigramme `ILF` a été utilisé pour toutes les ressources.
 
 ## Étape 1 : Préparation de l’environnement
-
-Configuration de l’AWS CLI et de la console en anglais (US).  
+ 
 Création des fichiers Terraform suivants :
 
 - **providers.tf** : provider AWS en région `us-east-1`.
@@ -35,7 +34,7 @@ Planification :
 terraform plan
 
 
-**Résultat :** 15 ressources prévues (1 VPC, 2 subnets publics, 1 IGW, 1 route table + 2 associations, 2 security groups, 1 ALB, 1 target group, 1 listener, 1 launch template, 1 Auto Scaling Group).[file:28]
+**Résultat :** 15 ressources prévues (1 VPC, 2 subnets publics, 1 IGW, 1 route table + 2 associations, 2 security groups, 1 ALB, 1 target group, 1 listener, 1 launch template, 1 Auto Scaling Group).
 
 Déploiement :
 
@@ -43,7 +42,7 @@ terraform apply
 
 
 
-**Déploiement réussi** créant l’infrastructure avec 2 instances EC2 (`desired_capacity = 2`) dans l’ASG `ILF-asg`.[file:23]
+**Déploiement réussi** créant l’infrastructure avec 2 instances EC2 (`desired_capacity = 2`) dans l’ASG `ILF-asg`.
 
 **Captures :**
 
@@ -63,7 +62,7 @@ L’infrastructure obtenue :
 - **Auto Scaling Group** : `ILF-asg` (min = 1, max = 3, desired = 2) basé sur le launch template `ILF-lt`
 - **Security Groups** :
   - `ILF_alb_sg` : HTTP Internet → ALB
-  - `ILF_inst_sg` : HTTP ALB → instances.[file:22]
+  - `ILF_inst_sg` : HTTP ALB → instances.
 
 **Capture :**
 
