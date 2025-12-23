@@ -1,71 +1,104 @@
-# **TP Terraform **
+# TP Terraform
 
-Ce TP a consisté à créer une infrastructure AWS scalable avec Terraform utilisant un Auto Scaling Group, Application Load Balancer et instances EC2 automatisées. Le trigramme "ILF" a été utilisé pour toutes les ressources. Voici le déroulement détaillé des étapes de développement et déploiement.
+Ce TP a consisté à créer une infrastructure AWS scalable avec Terraform utilisant un Auto Scaling Group, un Application Load Balancer et des instances EC2 automatisées. Le trigramme `ILF` a été utilisé pour toutes les ressources.
 
-## **Étape 1 : Préparation Environnement**
+## Étape 1 : Préparation de l’environnement
 
-Configuration AWS CLI et console en anglais (US). Création des fichiers Terraform suivants :
+Configuration de l’AWS CLI et de la console en anglais (US).  
+Création des fichiers Terraform suivants :
 
-* **providers.tf** : Provider AWS région us-east-1
+- **providers.tf** : provider AWS en région `us-east-1`.
+- **variables.tf** : `trigramme = "ILF"`, `ami_id = "ami-0c02fb55956c7d316"` (Amazon Linux 2), `desired_capacity = 2`.
+- **main.tf** : infrastructure complète (VPC, subnets, IGW, route table, security groups, ALB, target group, listener, launch template, ASG).
+- **userdata.sh** : script bash installant `httpd` et générant un `index.html` dynamique avec l’ID de l’instance et le trigramme.
+- **terraform.tfvars** : affectation de la valeur `trigramme = "ILF"`.
 
-* **variables.tf** : trigramme="ILF", AMI="ami-0c02fb55956c7d316" (Amazon Linux 2), desired\_capacity=2
+Commandes utilisées :
 
-* **main.tf** : Infrastructure complète (VPC, subnets, IGW, RT, SGs, ALB, TG, Listener, Launch Template, ASG)
+terraform init
+terraform validate
 
-* **userdata.sh** : Script bash installant httpd et générant index.html dynamique avec ID instance \+ trigramme
 
-* **terraform.tfvars** : trigramme \= "ILF"
 
-Commandes : `terraform init` puis `terraform validate`.
+**Captures :**
 
-## **Étape 2 : Planification et Déploiement Initial**
+![Configuration du provider AWS](images/provider.jpg)  
+![Variables Terraform](images/variables.jpg)  
+![terraform init réussi](images/init.jpg)
 
-`terraform plan`
+---
 
-**Résultat :** 15 ressources prévues (1 VPC, 2 subnets publics, 1 IGW, 1 RT+2 associations, 2 SGs, 1 ALB, 1 TG, 1 Listener, 1 LT, 1 ASG).
+## Étape 2 : Planification et déploiement initial
 
-text  
-`terraform apply`
+Planification :
 
-**Déploiement réussi** créant l'infrastructure avec 2 instances EC2 (desired\_capacity=2) dans l'ASG "ILF-asg".
+terraform plan
 
-## **Étape 3 : Architecture Créée**
 
-L'infrastructure respecte le schéma demandé :
+**Résultat :** 15 ressources prévues (1 VPC, 2 subnets publics, 1 IGW, 1 route table + 2 associations, 2 security groups, 1 ALB, 1 target group, 1 listener, 1 launch template, 1 Auto Scaling Group).[file:28]
 
-* **VPC** : ILF\_vpc (10.0.0.0/16)
+Déploiement :
 
-* **Subnets publics** : ILF\_public\_a (us-east-1a), ILF\_public\_b (us-east-1b)
+terraform apply
 
-* **Application Load Balancer** : ILF-alb exposé port 80
 
-* **Target Group** : ILF-tg avec health checks HTTP/200
 
-* **Auto Scaling Group** : ILF-asg (min=1, max=3, desired=2) sur Launch Template ILF-lt-
+**Déploiement réussi** créant l’infrastructure avec 2 instances EC2 (`desired_capacity = 2`) dans l’ASG `ILF-asg`.[file:23]
 
-* **Security Groups** : ILF\_alb\_sg (HTTP internet→ALB), ILF\_inst\_sg (HTTP ALB→instances)
+**Captures :**
 
-## **Étape 4 : Test Scaling Prévu**
+![Résultat de terraform plan](images/plan.jpg)  
+![Résultat de terraform apply (création des ressources)](images/apply.jpg)
 
-`terraform apply -var="desired_capacity=3"`
+---
 
-Cette commande augmentera l'ASG à 3 instances. Les nouvelles instances s'enregistreront automatiquement dans le Target Group via health checks ELB.
+## Étape 3 : Architecture créée
 
-## **Étape 5 : Vérifications Prévue**
+L’infrastructure obtenue :
 
-* Accès ALB DNS pour voir rotation IDs instances \+ "Trigramme: ILF"
+- **VPC** : `ILF_vpc` (`10.0.0.0/16`)
+- **Subnets publics** : `ILF_public_a` (us-east-1a), `ILF_public_b` (us-east-1b)
+- **Application Load Balancer** : `ILF-alb` exposé sur le port 80
+- **Target Group** : `ILF-tg` avec health checks HTTP/200)
+- **Auto Scaling Group** : `ILF-asg` (min = 1, max = 3, desired = 2) basé sur le launch template `ILF-lt`
+- **Security Groups** :
+  - `ILF_alb_sg` : HTTP Internet → ALB
+  - `ILF_inst_sg` : HTTP ALB → instances.[file:22]
 
-* Console AWS : ASG, Target Group, ALB pour valider cibles saines
+**Capture :**
 
-* Tests scaling up/down via modification desired\_capacity
+![Détails de l'Auto Scaling Group ILF-asg](images/asg.jpg)
 
-## **Étape 6 : Nettoyage**
+---
 
-`terraform destroy`
+## Étape 4 : Test de scaling
 
-## **Fichiers Sources**
+Test d’augmentation de capacité :
 
-Tous les fichiers Terraform sont prêts pour dépôt Git sur Moodle :
+terraform apply -var="desired_capacity=3"
 
-`main.tf, variables.tf, providers.tf, terraform.tfvars, userdata.sh, .terraform.lock.hcl, .gitignore`
 
+Cette commande met à jour l’ASG pour lancer 3 instances EC2, qui s’enregistrent automatiquement dans le target group via les health checks de l’ALB.[file:25][file:21]
+
+**Captures :**
+
+![ASG avec capacité souhaitée passée à 3](images/asg2.jpg)  
+![Instances EC2 en cours d'exécution](images/instances.jpg)
+
+---
+
+## Étape 5 : Vérifications
+
+- Accès au DNS de l’ALB pour observer la rotation entre les instances et l’affichage de `Trigramme: ILF` avec l’ID de l’instance.
+- Vérification dans la console AWS :
+  - ASG `ILF-asg` : instances en `InService`.
+  - Target group `ILF-tg` : cibles en `healthy`.
+  - ALB `ILF-alb` : listener HTTP sur le port 80.[file:21][file:22]
+
+---
+
+## Étape 6 : Nettoyage
+
+Destruction complète de l’infrastructure :
+
+terraform destroy
