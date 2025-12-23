@@ -1,5 +1,6 @@
 # TP Terraform
 
+liens vers le repo github: https://github.com/inasseLoucif/TP3-Terraform
 Ce TP a consisté à créer une infrastructure AWS scalable avec Terraform utilisant un Auto Scaling Group, un Application Load Balancer et des instances EC2 automatisées. Le trigramme `ILF` a été utilisé pour toutes les ressources.
 
 ## Étape 1 : Préparation de l’environnement
